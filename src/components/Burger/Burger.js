@@ -13,6 +13,15 @@ const burger = (props) => {
           )
       }
     )
+    .reduce((arr, el) => {
+      return arr.concat(el)
+    }, [])
+
+  if (staff.length === 0) {
+    staff = <p>Please start adding ingredients!</p>
+  }
+
+  console.log(staff)
 
   return (
     <div className={classes.Burger}>
