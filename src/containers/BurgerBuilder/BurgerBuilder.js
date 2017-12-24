@@ -49,21 +49,24 @@ class BurgerBuilder extends Component {
     } )
   }
   
+  orderHandler = () => {
+    this.setState( { ordered: !this.state.ordered } )
+  }
+  
+  orderContinueHandler = () => {
+    alert( 'You continue!' )
+  }
+  
   render() {
-    
-    // let orderSummary = null
-    //
-    // if (this.state.ordered) {
-    //   orderSummary =
-    //     <Modal>
-    //       <OrderSummary ingredients={this.state.ingredients}/>
-    //     </Modal>
-    // }
     
     return (
       <Aux>
-        <Modal show={this.state.ordered}>
-          <OrderSummary ingredients={this.state.ingredients} />
+        <Modal show={this.state.ordered} modalClosed={this.orderHandler}>
+          <OrderSummary ingredients={this.state.ingredients}
+                        totalPrice={this.state.totalPrice}
+                        continue={this.orderContinueHandler}
+                        cancel={this.orderHandler}
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
