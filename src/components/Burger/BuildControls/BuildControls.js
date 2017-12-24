@@ -12,20 +12,22 @@ const controls = [
 const buildControls = ( props ) =>
   <div className={classes.BuildControls}>
     
-    <h2>Total price: <strong>{props.price.toFixed(2)}</strong>$</h2>
+    <h2>Total price: <strong>{props.price.toFixed( 2 )}</strong>$</h2>
     
     {controls.map( ctrl =>
       
       <BuildControl
         key={ctrl.label}
         label={ctrl.label}
-        added={() => props.ingredientChange(ctrl.type, true)}
-        removed={() => props.ingredientChange(ctrl.type, false)}
+        added={() => props.ingredientChange( ctrl.type, true )}
+        removed={() => props.ingredientChange( ctrl.type, false )}
         ingrCount={props.ingredients[ctrl.type]}
       />
     )}
     
-    <button className={classes.OrderButton} disabled={props.price < 4.1}>ORDER NOW</button>
+    <button className={classes.OrderButton}
+            disabled={props.price < 4.1}
+            onClick={props.orderClicked}>ORDER NOW</button>
   </div>
 
 export default buildControls

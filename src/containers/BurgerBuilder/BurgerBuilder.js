@@ -20,15 +20,20 @@ class BurgerBuilder extends Component {
         cheese: 0,
         meat: 0
       },
-      totalPrice: 4
+      totalPrice: 4,
+      ordered: false
     }
   }
   
+  orderHandler = () => {
+    this.setState( { ordered: !this.state.ordered } )
+  }
+  
   changeIngredientHandler = ( type, added ) => {
-  
-  
+    
+    
     console.log( 'changeIngr: ' + type + ' ' + added );
-  
+    
     const oldCount = this.state.ingredients[type]
     const updatedIngredients = { ...this.state.ingredients }
     
@@ -40,22 +45,32 @@ class BurgerBuilder extends Component {
     
     this.setState( {
       ingredients: updatedIngredients,
-      totalPrice: added ? oldPrice +  ingrPrice : oldPrice - ingrPrice
+      totalPrice: added ? oldPrice + ingrPrice : oldPrice - ingrPrice
     } )
   }
   
   render() {
     
+    // let orderSummary = null
+    //
+    // if (this.state.ordered) {
+    //   orderSummary =
+    //     <Modal>
+    //       <OrderSummary ingredients={this.state.ingredients}/>
+    //     </Modal>
+    // }
+    
     return (
       <Aux>
-        <Modal>
-          <OrderSummary ingredients={this.state.ingredients}/>
+        <Modal show={this.state.ordered}>
+          <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
+        <Burger ingredients={this.state.ingredients}/>
         <BuildControls
           ingredientChange={this.changeIngredientHandler}
           ingredients={this.state.ingredients}
           price={this.state.totalPrice}
+          orderClicked={this.orderHandler}
         />
       </Aux>
     )
