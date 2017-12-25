@@ -5,11 +5,9 @@ import classes from './NavigationItems.css'
 const navigationItems = () =>
   <div className={classes.NavigationItems}>
     
-    <NavigationItem/>
-    <NavigationItem/>
-    <NavigationItem/>
-    <NavigationItem/>
-    <NavigationItem/>
+    <NavigationItem link='/' active>Burger Builder</NavigationItem>
+    <NavigationItem link='/' >Checkout</NavigationItem>
+    <NavigationItem link='/' >Dummy</NavigationItem>
   
   </div>
 
