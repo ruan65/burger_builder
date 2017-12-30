@@ -50,10 +50,6 @@ class BurgerBuilder extends Component {
     })
   }
   
-  orderHandler = () => {
-    this.setState({ ordered: !this.state.ordered })
-  }
-  
   orderContinueHandler = () => {
     
     this.setState({ loading: true })
@@ -73,7 +69,7 @@ class BurgerBuilder extends Component {
       deliveryMethod: 'fastest'
     }
     
-    AxiosOrders.post('/orders.json', order)
+    AxiosOrders.post('/orders.jsommmmmmmm', order)
       .then(response => {
         console.log(response)
       })
