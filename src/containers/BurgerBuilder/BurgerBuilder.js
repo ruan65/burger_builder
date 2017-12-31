@@ -17,35 +17,37 @@ const INITIAL_PRICE = 4
 
 class BurgerBuilder extends Component {
   
-  getIngredientsPrices = () => {
-    
-    return !this.state.ingredients ? 0 :
-      Object.keys(this.state.ingredients)
-        .map(ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr])
-        .reduce(( total, price ) => total + price, 0)
-  }
-  
   state = {
     ingredients: null,
     totalPrice: INITIAL_PRICE,
     ordered: false,
-    loading: false
+    loading: false,
+    error: false
   }
   
   componentDidMount() {
     
-    AxiosOrders.get('/ingredients.json').then(resp => {
-      this.setState({ ingredients: resp.data })
-      
-      console.log("ingr: " + this.getIngredientsPrices())
-      
-      if (this.state.ingredients) {
+    AxiosOrders.get('/ingredients.json')
+      .then(resp => {
+        this.setState({ ingredients: resp.data })
         
-        this.setState({totalPrice: INITIAL_PRICE + this.getIngredientsPrices()})
-      }
-      
-    })
+        console.log("ingr: " + this.getIngredientsPrices())
+        
+        if (this.state.ingredients) {
+          
+          this.setState({ totalPrice: INITIAL_PRICE + this.getIngredientsPrices() })
+        }
+        
+      })
+      .catch(err => {
+        this.setState({error: true})
+      })
   }
+  
+  getIngredientsPrices = () => !this.state.ingredients ? 0 :
+    Object.keys(this.state.ingredients)
+      .map(ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr])
+      .reduce(( total, ingrPrice ) => total + ingrPrice, 0)
   
   orderHandler = () => {
     this.setState({ ordered: !this.state.ordered })
@@ -105,7 +107,10 @@ class BurgerBuilder extends Component {
   
   render() {
     
-    let burger = !this.state.ingredients ? <Spinner/> : (
+    let burger = !this.state.ingredients
+      ?
+      (this.state.error ? <p style={{color: 'red', margin: '20px' }}>Ingredients can not be loaded!</p> : <Spinner/>)
+      :
       <Aux>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
@@ -115,7 +120,6 @@ class BurgerBuilder extends Component {
           orderClicked={this.orderHandler}
         />
       </Aux>
-    )
     
     let orderSummary = !this.state.ingredients ? null : (
       <OrderSummary
