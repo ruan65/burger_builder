@@ -17,7 +17,7 @@ const withErrorHandler = ( WrappedComponent, axios ) => {
       })
       
       axios.interceptors.response.use(res => res, err => {
-        this.setState({ error: err.toString() })
+        this.setState({ error: err })
       })
     }
     
@@ -32,7 +32,7 @@ const withErrorHandler = ( WrappedComponent, axios ) => {
           <Modal show={this.state.error} modalClosed={this.errorConfirmedHandler}>
             <p style={{ color: 'red' }}>Something did not work!</p>
             
-            <p>{this.state.error}</p>
+            <p>{this.state.error ? this.state.error.message : null}</p>
           </Modal>
           <WrappedComponent {...this.props} />
         </Aux>

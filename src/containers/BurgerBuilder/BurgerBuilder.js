@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import Burger from '../../components/Burger/Burger'
 import Aux from '../../hoc/Aux'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
@@ -12,18 +13,38 @@ const INGREDIENT_PRICES = {
   salad: .5, cheese: .4, meat: 1.3, bacon: .7
 }
 
+const INITIAL_PRICE = 4
+
 class BurgerBuilder extends Component {
   
+  getIngredientsPrices = () => {
+    
+    return !this.state.ingredients ? 0 :
+      Object.keys(this.state.ingredients)
+        .map(ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr])
+        .reduce(( total, price ) => total + price, 0)
+  }
+  
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
-    totalPrice: 4,
+    ingredients: null,
+    totalPrice: INITIAL_PRICE,
     ordered: false,
     loading: false
+  }
+  
+  componentDidMount() {
+    
+    AxiosOrders.get('/ingredients.json').then(resp => {
+      this.setState({ ingredients: resp.data })
+      
+      console.log("ingr: " + this.getIngredientsPrices())
+      
+      if (this.state.ingredients) {
+        
+        this.setState({totalPrice: INITIAL_PRICE + this.getIngredientsPrices()})
+      }
+      
+    })
   }
   
   orderHandler = () => {
@@ -69,7 +90,7 @@ class BurgerBuilder extends Component {
       deliveryMethod: 'fastest'
     }
     
-    AxiosOrders.post('/orders.jsommmmmmmm', order)
+    AxiosOrders.post('/orders.json', order)
       .then(response => {
         console.log(response)
       })
@@ -84,13 +105,26 @@ class BurgerBuilder extends Component {
   
   render() {
     
-    let orderSummary =
+    let burger = !this.state.ingredients ? <Spinner/> : (
+      <Aux>
+        <Burger ingredients={this.state.ingredients}/>
+        <BuildControls
+          ingredientChange={this.changeIngredientHandler}
+          ingredients={this.state.ingredients}
+          price={this.state.totalPrice}
+          orderClicked={this.orderHandler}
+        />
+      </Aux>
+    )
+    
+    let orderSummary = !this.state.ingredients ? null : (
       <OrderSummary
         ingredients={this.state.ingredients}
         totalPrice={this.state.totalPrice}
         continue={this.orderContinueHandler}
         cancel={this.orderHandler}
       />
+    )
     
     if (this.state.loading) {
       
@@ -102,13 +136,7 @@ class BurgerBuilder extends Component {
         <Modal show={this.state.ordered} modalClosed={this.orderHandler}>
           {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients}/>
-        <BuildControls
-          ingredientChange={this.changeIngredientHandler}
-          ingredients={this.state.ingredients}
-          price={this.state.totalPrice}
-          orderClicked={this.orderHandler}
-        />
+        {burger}
       </Aux>
     )
   }
