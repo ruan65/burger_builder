@@ -27,36 +27,36 @@ class BurgerBuilder extends Component {
   
   componentDidMount() {
     
-    AxiosOrders.get('/ingredients.json')
-      .then(resp => {
-        this.setState({ ingredients: resp.data })
+    AxiosOrders.get( '/ingredients.json' )
+      .then( resp => {
+        this.setState( { ingredients: resp.data } )
         
-        console.log("ingr: " + this.getIngredientsPrices())
+        console.log( "ingr: " + this.getIngredientsPrices() )
         
-        if (this.state.ingredients) {
+        if ( this.state.ingredients ) {
           
-          this.setState({ totalPrice: INITIAL_PRICE + this.getIngredientsPrices() })
+          this.setState( { totalPrice: INITIAL_PRICE + this.getIngredientsPrices() } )
         }
         
-      })
-      .catch(err => {
-        this.setState({error: true})
-      })
+      } )
+      .catch( err => {
+        this.setState( { error: true } )
+      } )
   }
   
   getIngredientsPrices = () => !this.state.ingredients ? 0 :
-    Object.keys(this.state.ingredients)
-      .map(ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr])
-      .reduce(( total, ingrPrice ) => total + ingrPrice, 0)
+    Object.keys( this.state.ingredients )
+      .map( ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr] )
+      .reduce( ( total, ingrPrice ) => total + ingrPrice, 0 )
   
   orderHandler = () => {
-    this.setState({ ordered: !this.state.ordered })
+    this.setState( { ordered: !this.state.ordered } )
   }
   
   changeIngredientHandler = ( type, added ) => {
     
     
-    console.log('changeIngr: ' + type + ' ' + added);
+    console.log( 'changeIngr: ' + type + ' ' + added );
     
     const oldCount = this.state.ingredients[type]
     const updatedIngredients = { ...this.state.ingredients }
@@ -67,49 +67,27 @@ class BurgerBuilder extends Component {
     const oldPrice = this.state.totalPrice
     const ingrPrice = INGREDIENT_PRICES[type]
     
-    this.setState({
+    this.setState( {
       ingredients: updatedIngredients,
       totalPrice: added ? oldPrice + ingrPrice : oldPrice - ingrPrice
-    })
+    } )
   }
   
   orderContinueHandler = () => {
     
-    this.setState({ loading: true })
-    
-    const order = {
-      ingredients: this.state.ingredients,
-      totalPrice: this.state.totalPrice,
-      customer: {
-        name: 'Andrew',
-        address: {
-          street: 'Bratislavskaya',
-          zipCode: '109451',
-          city: 'Moscow'
-        },
-        email: 'ruan65@ya.ru'
-      },
-      deliveryMethod: 'fastest'
-    }
-    
-    AxiosOrders.post('/orders.json', order)
-      .then(response => {
-        console.log(response)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .finally(() => {
-        console.log('Inside finally')
-        this.setState({ loading: false, ordered: false })
-      })
+    this.props.history.push(
+      {
+        pathname: '/checkout',
+        state: this.state.ingredients
+      }
+    )
   }
   
   render() {
     
     let burger = !this.state.ingredients
       ?
-      (this.state.error ? <p style={{color: 'red', margin: '20px' }}>Ingredients can not be loaded!</p> : <Spinner/>)
+      ( this.state.error ? <p style={{ color: 'red', margin: '20px' }}>Ingredients can not be loaded!</p> : <Spinner/> )
       :
       <Aux>
         <Burger ingredients={this.state.ingredients}/>
@@ -130,7 +108,7 @@ class BurgerBuilder extends Component {
       />
     )
     
-    if (this.state.loading) {
+    if ( this.state.loading ) {
       
       orderSummary = <Spinner/>
     }
@@ -146,4 +124,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default withErrorHandler(BurgerBuilder, AxiosOrders)
+export default withErrorHandler( BurgerBuilder, AxiosOrders )
