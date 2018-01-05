@@ -4,10 +4,10 @@ import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSumm
 import ContactData from './ContactData/ContactData'
 
 class Checkout extends Component {
-
+  
   componentWillMount() {
-    console.log(this.props)
-    this.setState({ingredients: this.props.location.state})
+    console.log( this.props )
+    this.setState( { ingredients: this.props.location.state } )
   }
   
   checkoutCancelledHandler = () => {
@@ -15,48 +15,22 @@ class Checkout extends Component {
   }
   
   checkoutContinuedHandler = () => {
-    this.props.history.replace('/checkout/contact-data')
-  
-    // this.setState({ loading: true })
-    //
-    // const order = {
-    //   ingredients: this.state.ingredients,
-    //   totalPrice: this.state.totalPrice,
-    //   customer: {
-    //     name: 'Andrew',
-    //     address: {
-    //       street: 'Bratislavskaya',
-    //       zipCode: '109451',
-    //       city: 'Moscow'
-    //     },
-    //     email: 'ruan65@ya.ru'
-    //   },
-    //   deliveryMethod: 'fastest'
-    // }
-    //
-    // AxiosOrders.post('/orders.json', order)
-    //   .then(response => {
-    //     console.log(response)
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
-    //   .finally(() => {
-    //     console.log('Inside finally')
-    //     this.setState({ loading: false, ordered: false })
-    //   })
+    this.props.history.replace( '/checkout/contact-data' )
+    
   }
   
   render() {
-    return (
-      <div>
-        <CheckoutSummary
-          ingredients={this.state.ingredients}
-          checkoutCancelled={this.checkoutCancelledHandler}
-          checkoutContinued={this.checkoutContinuedHandler}
-        />
-        <Route path={this.props.match.path + '/contact-data'} component={ContactData}/>
-      </div>
+    return ( this.state.ingredients ?
+        <div>
+          <CheckoutSummary ingredients={this.state.ingredients}
+                           checkoutCancelled={this.checkoutCancelledHandler}
+                           checkoutContinued={this.checkoutContinuedHandler}
+          />
+          <Route path={this.props.match.path + '/contact-data'}
+                 render={(props) => <ContactData ingredients={this.state.ingredients} {...props}/>}
+          />
+        </div>
+        : <h2>Nothing interesting here if you just entered url.</h2>
     )
   }
 }

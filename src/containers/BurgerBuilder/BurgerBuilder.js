@@ -9,11 +9,10 @@ import AxiosOrders from '../../AxiosOrders'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler'
 
-const INGREDIENT_PRICES = {
-  salad: .5, cheese: .4, meat: 1.3, bacon: .7
+import {
+  getIngredientsPrices, INITIAL_PRICE, INGREDIENT_PRICES
 }
-
-const INITIAL_PRICE = 4
+  from '../../Helpers/PriceHelpers'
 
 class BurgerBuilder extends Component {
   
@@ -31,11 +30,9 @@ class BurgerBuilder extends Component {
       .then( resp => {
         this.setState( { ingredients: resp.data } )
         
-        console.log( "ingr: " + this.getIngredientsPrices() )
-        
         if ( this.state.ingredients ) {
           
-          this.setState( { totalPrice: INITIAL_PRICE + this.getIngredientsPrices() } )
+          this.setState( { totalPrice: INITIAL_PRICE + getIngredientsPrices( this.state.ingredients ) } )
         }
         
       } )
@@ -43,11 +40,6 @@ class BurgerBuilder extends Component {
         this.setState( { error: true } )
       } )
   }
-  
-  getIngredientsPrices = () => !this.state.ingredients ? 0 :
-    Object.keys( this.state.ingredients )
-      .map( ingr => INGREDIENT_PRICES[ingr] * this.state.ingredients[ingr] )
-      .reduce( ( total, ingrPrice ) => total + ingrPrice, 0 )
   
   orderHandler = () => {
     this.setState( { ordered: !this.state.ordered } )
