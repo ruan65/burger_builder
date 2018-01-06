@@ -5,7 +5,7 @@ import AxiosOrders from '../../../AxiosOrders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 
 import {
-  getIngredientsPrices, INITIAL_PRICE, INGREDIENT_PRICES
+  getIngredientsPrices, INITIAL_PRICE
 } from '../../../Helpers/PriceHelpers'
 
 class ContactData extends Component {
