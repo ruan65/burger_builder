@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <Layout>
         <Switch>
-          <Route path='/orders' render={() => <Order/>} />
+          <Route path='/orders' exact render={() => <Order/>} />
           <Route path='/checkout' component={Checkout}/>
           <Route path='/' exact component={BurgerBuilder}/>
         </Switch>

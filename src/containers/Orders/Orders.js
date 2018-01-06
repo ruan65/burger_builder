@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Order from './Order/Order'
 import AxiosOrders from "../../AxiosOrders"
+import withErrorHandler from '../../hoc/withErrorHandler'
 
 class Orders extends Component {
   
@@ -42,4 +43,4 @@ class Orders extends Component {
   }
 }
 
-export default Orders
+export default withErrorHandler(Orders, AxiosOrders)

@@ -8,13 +8,16 @@ const order = ( props ) => {
   const ingredients = ingrObj ?
     
     Object.entries( ingrObj ).map( ( ingr, i ) =>
-      <p key={ingr[0] + i}>{ingr[0]}: ({ingr[1]})</p> )
+      <span className={classes.Ingredient}
+            key={ingr[0] + i}>
+        {ingr[0]}: ({ingr[1]})
+      </span> )
     
     : null
   
   return (
     <div className={classes.Order}>
-      {ingredients}
+      <p>Ingredients: {ingredients}</p>
       <p>Price: <strong>$ {props.order.totalPrice}</strong></p>
     </div>
   )
