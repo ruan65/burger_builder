@@ -6,7 +6,6 @@ import ContactData from './ContactData/ContactData'
 class Checkout extends Component {
   
   componentWillMount() {
-    console.log( this.props )
     this.setState( { ingredients: this.props.location.state } )
   }
   

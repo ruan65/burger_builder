@@ -3,11 +3,7 @@ import Aux from '../../../hoc/Aux'
 import CustomButton from '../../UI/Button/CustomButton'
 
 class OrderSummary extends Component {
-  
-  componentWillUpdate() {
-    console.log("OrderSummary will update")
-  }
-  
+
   render() {
   
     const ingredientsSummary = Object.keys( this.props.ingredients )

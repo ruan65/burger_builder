@@ -11,7 +11,8 @@ import { getIngredientsPrices, INITIAL_PRICE } from '../../../Helpers/PriceHelpe
 class ContactData extends Component {
   
   state = {
-    orderForm: orderFormMockUp
+    orderForm: orderFormMockUp,
+    enableSubmitButton: false
   }
   
   orderHandler = ( event ) => {
@@ -44,7 +45,7 @@ class ContactData extends Component {
   }
   
   checkValidity(value, rules) {
-    if (!rules.required) return true
+    if (!rules || !rules.required) return true
     let valid = value.trim() !== ''
     
     if (rules.minLength) {
@@ -67,8 +68,19 @@ class ContactData extends Component {
     updatedFormElement.value = value
     updatedFormElement.valid = this.checkValidity(value, updatedFormElement.validation)
     updatedForm[inputId] = updatedFormElement
-    // console.log(updatedFormElement)
-    this.setState({orderForm: updatedForm})
+    const submitEnable = this.checkFormValidity(updatedForm)
+    console.log(submitEnable)
+    this.setState({
+      orderForm: updatedForm,
+      enableSubmitButton : submitEnable
+    })
+  }
+  
+  checkFormValidity (form) {
+    
+    return Object.values(form)
+      .map(el => el.validation ? el.valid : true)
+      .reduce((valid, el) => valid && el)
   }
   
   render() {
@@ -102,7 +114,10 @@ class ContactData extends Component {
               }
             )
           }
-          <Button btnType='Success'>ORDER</Button>
+          <Button
+            btnType='Success'
+            disabled={!this.state.enableSubmitButton}
+          >ORDER</Button>
         </form>
       </div>
     return ( this.props.ingredients ? form : null )

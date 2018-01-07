@@ -11,8 +11,6 @@ function getInputElement( props ) {
   
   const style = inputStyleClasses.join(' ')
   
-  console.log(style)
-  
   let inputElement = null
   
   const inputType = <input className={style}
