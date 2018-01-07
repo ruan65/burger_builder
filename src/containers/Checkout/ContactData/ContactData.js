@@ -46,8 +46,12 @@ class ContactData extends Component {
   checkValidity(value, rules) {
     if (!rules.required) return true
     let valid = value.trim() !== ''
+    
     if (rules.minLength) {
-      valid = value.length >= rules.minLength
+      valid = value.length >= rules.minLength && valid
+    }
+    if (rules.maxLength) {
+      valid = value.length <= rules.maxLength && valid
     }
     return  valid
   }
@@ -59,10 +63,11 @@ class ContactData extends Component {
     const updatedForm = { ...this.state.orderForm }
     const updatedFormElement = { ...updatedForm[inputId]}
     
+    updatedFormElement.touched = true
     updatedFormElement.value = value
     updatedFormElement.valid = this.checkValidity(value, updatedFormElement.validation)
     updatedForm[inputId] = updatedFormElement
-    console.log(updatedFormElement)
+    // console.log(updatedFormElement)
     this.setState({orderForm: updatedForm})
   }
   
@@ -72,7 +77,7 @@ class ContactData extends Component {
     
     for ( let key in this.state.orderForm ) {
       
-      formElementsArray.push( { id: key, config: this.state.orderForm[key] } )
+      formElementsArray.push( { id: key, config: this.state.orderForm[key]} )
     }
     
     const form = this.state && this.state.loading ? <Spinner/> :
@@ -88,6 +93,9 @@ class ContactData extends Component {
                     elementType={config.elementType}
                     elementConfig={config.elementConfig}
                     value={config.value}
+                    shouldValidate={config.validation}
+                    touched={config.touched}
+                    invalid={!config.valid}
                     changed={(event) => this.inputChangedHandler(event, formElement.id)}
                   />
                 )

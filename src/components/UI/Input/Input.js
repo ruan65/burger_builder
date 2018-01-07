@@ -1,16 +1,26 @@
 import React from 'react'
 import classes from './Input.css'
 
-const input = ( props ) => {
+function getInputElement( props ) {
+  
+  const inputStyleClasses = [classes.InputElement]
+  
+  if (props.shouldValidate && props.touched && props.invalid) {
+    inputStyleClasses.push(classes.Invalid)
+  }
+  
+  const style = inputStyleClasses.join(' ')
+  
+  console.log(style)
   
   let inputElement = null
   
-  const inputType = <input className={classes.InputElement}
+  const inputType = <input className={style}
                            {...props.elementConfig}
                            onChange={props.changed}
                            value={props.value}/>
   
-  const textareaType = <textarea className={classes.InputElement}
+  const textareaType = <textarea className={style}
                                  {...props.elementConfig}
                                  onChange={props.changed}
                                  value={props.value}/>
@@ -21,7 +31,7 @@ const input = ( props ) => {
       break
     case ( 'select' ):
       inputElement = (
-        <select className={classes.InputElement}
+        <select className={style}
                 value={props.value}
                 onChange={props.changed}>
           {props.elementConfig.options.map( cnf => (
@@ -36,10 +46,14 @@ const input = ( props ) => {
     default:
       inputElement = inputType
   }
+  return inputElement
+}
+
+const input = ( props ) => {
   
   return <div className={classes.Input}>
     <label className={classes.Label}>{props.label}</label>
-    {inputElement}
+    {getInputElement(props)}
   </div>
 }
 

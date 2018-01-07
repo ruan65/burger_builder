@@ -10,7 +10,8 @@ export const orderFormMockUp = {
       required: true,
       minLength: 2
     },
-    valid: false
+    valid: false,
+    touched: false
   },
   street: {
     elementType: 'input',
@@ -22,7 +23,8 @@ export const orderFormMockUp = {
     validation: {
       required: true
     },
-    valid: false
+    valid: false,
+    touched: false
   },
   zipCode: {
     elementType: 'input',
@@ -33,9 +35,11 @@ export const orderFormMockUp = {
     },
     validation: {
       required: true,
-      minLength: 5
+      minLength: 5,
+      maxLength: 5
     },
-    valid: false
+    valid: false,
+    touched: false
   },
   email: {
     elementType: 'input',
@@ -47,11 +51,12 @@ export const orderFormMockUp = {
     validation: {
       required: true
     },
-    valid: false
+    valid: false,
+    touched: false
   },
   deliveryMethod: {
     elementType: 'select',
-    value: '',
+    value: 'fastest',
     elementConfig: {
       options: [
         {value: 'fastest', displayValue: 'Fastest'},
@@ -59,9 +64,7 @@ export const orderFormMockUp = {
         {value: 'normal', displayValue: 'Normal'}
       ]
     },
-    validation: {
-      required: true
-    },
-    valid: false
+    valid: false,
+    touched: false
   }
 }
