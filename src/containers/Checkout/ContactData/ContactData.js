@@ -5,9 +5,8 @@ import AxiosOrders from '../../../AxiosOrders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import Input from '../../../components/UI/Input/Input'
 
-import {
-  getIngredientsPrices, INITIAL_PRICE, orderFormMockUp
-} from '../../../Helpers/PriceHelpers'
+import { orderFormMockUp } from '../../../Helpers/OrderForm'
+import { getIngredientsPrices, INITIAL_PRICE } from '../../../Helpers/PriceHelpers'
 
 class ContactData extends Component {
   
@@ -20,10 +19,17 @@ class ContactData extends Component {
     
     this.setState( { loading: true } )
     
+    const formData = {}
+    
+    for (let formElemId in this.state.orderForm) {
+
+      formData[formElemId] = this.state.orderForm[formElemId].value
+    }
+    
     const order = {
       ingredients: this.props.ingredients,
       totalPrice: INITIAL_PRICE + getIngredientsPrices( this.props.ingredients ),
-      
+      orderData: formData
     }
     
     AxiosOrders.post( '/orders.json', order )
@@ -37,15 +43,26 @@ class ContactData extends Component {
       } )
   }
   
+  checkValidity(value, rules) {
+    if (!rules.required) return true
+    let valid = value.trim() !== ''
+    if (rules.minLength) {
+      valid = value.length >= rules.minLength
+    }
+    return  valid
+  }
+  
   inputChangedHandler = (event, inputId) => {
     
     const value = event.target.value
+    
     const updatedForm = { ...this.state.orderForm }
     const updatedFormElement = { ...updatedForm[inputId]}
     
     updatedFormElement.value = value
+    updatedFormElement.valid = this.checkValidity(value, updatedFormElement.validation)
     updatedForm[inputId] = updatedFormElement
-    
+    console.log(updatedFormElement)
     this.setState({orderForm: updatedForm})
   }
   
@@ -61,7 +78,7 @@ class ContactData extends Component {
     const form = this.state && this.state.loading ? <Spinner/> :
       <div className={classes.ContactData}>
         <h4>Enter your data</h4>
-        <form>
+        <form  onSubmit={this.orderHandler}>
           {
             formElementsArray.map( ( formElement, i ) => {
                 const config = formElement.config
@@ -77,7 +94,7 @@ class ContactData extends Component {
               }
             )
           }
-          <Button btnType='Success' clicked={this.orderHandler}>ORDER</Button>
+          <Button btnType='Success'>ORDER</Button>
         </form>
       </div>
     return ( this.props.ingredients ? form : null )
