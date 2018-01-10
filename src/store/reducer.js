@@ -1,4 +1,8 @@
 import Action from './Actions'
+import {
+  getIngredientsPrices, INGREDIENT_PRICES, INITIAL_PRICE
+}
+  from "../Helpers/PriceHelpers";
 
 const initialState = {
   ingredients: {
@@ -7,23 +11,38 @@ const initialState = {
     meat: 0,
     salad: 0
   },
-  totalPrice: 4
+  totalPrice: INITIAL_PRICE
 }
 
-const reducer = (state = initialState, action) => {
+
+const reducer = ( state = initialState, action ) => {
   
   const count = state.ingredients[action.ingredientName]
-
-  switch (action.type) {
+  let num
+  
+  switch ( action.type ) {
+    
     case Action.ADD_INGREDIENT:
-      return { ...state, ingredients: { ...state.ingredients,
-          [action.ingredientName]: count < 3 ? count + 1 : count } }
-
+      num =  count < 3 ? count + 1 : count
+      break
+    
     case Action.REMOVE_INGREDIENT:
-      return { ...state, ingredients: { ...state.ingredients,
-          [action.ingredientName]: count > 0 ? count - 1 : count } }
+      num = count > 0 ? count - 1 : count
+      break
+    
     default:
       return state
+  }
+  
+  const ingredients = {
+    ...state.ingredients,
+    [action.ingredientName]: num
+  }
+  
+  return {
+    ...state,
+    ingredients: ingredients,
+    totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
   }
 }
 

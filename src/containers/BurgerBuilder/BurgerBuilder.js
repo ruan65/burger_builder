@@ -62,7 +62,7 @@ class BurgerBuilder extends Component {
           ingredientAdded={this.props.onIngrAdded}
           ingredientRemoved={this.props.onIngrRemoved}
           ingredients={this.props.ings}
-          price={4}
+          price={this.props.price}
           orderClicked={this.orderHandler}
         />
       </Aux>
@@ -95,7 +95,8 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients
+    ings: state.ingredients,
+    price: state.totalPrice
   }
 }
 
