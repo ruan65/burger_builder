@@ -11,16 +11,17 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-
-  const ingredientName = action.ingredientName
+  
   const count = state.ingredients[action.ingredientName]
 
   switch (action.type) {
     case Action.ADD_INGREDIENT:
-      return { ...state, ingredients: { ...state.ingredients, ingredientName: count < 3 ? count + 1 : count } }
+      return { ...state, ingredients: { ...state.ingredients,
+          [action.ingredientName]: count < 3 ? count + 1 : count } }
 
     case Action.REMOVE_INGREDIENT:
-      return { ...state, ingredients: { ...state.ingredients, ingredientName: count > 0 ? count - 1 : count } }
+      return { ...state, ingredients: { ...state.ingredients,
+          [action.ingredientName]: count > 0 ? count - 1 : count } }
     default:
       return state
   }

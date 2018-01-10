@@ -5,21 +5,15 @@ import Burger from '../../components/Burger/Burger'
 import Aux from '../../hoc/Aux'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
-import OrderSummary from '../../components/Order/OrderSummary/OrderSummary'
+// import OrderSummary from '../../components/Order/OrderSummary/OrderSummary'
 import AxiosOrders from '../../AxiosOrders'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler'
 import Actions from '../../store/Actions'
 
-import {
-  getIngredientsPrices, INITIAL_PRICE, INGREDIENT_PRICES
-}
-  from '../../Helpers/PriceHelpers'
-
 class BurgerBuilder extends Component {
 
   state = {
-    totalPrice: INITIAL_PRICE,
     ordered: false,
     loading: false,
     error: false
@@ -46,23 +40,6 @@ class BurgerBuilder extends Component {
     this.setState( { ordered: !this.state.ordered } )
   }
 
-  changeIngredientHandler = (type, added) => {
-
-    const oldCount = this.props.ings[type]
-    const updatedIngredients = { ...this.props.ings }
-
-    updatedIngredients[type] = added ? oldCount < 3 ? oldCount + 1 : oldCount :
-      oldCount > 0 ? oldCount - 1 : oldCount
-
-    const oldPrice = this.state.totalPrice
-    const ingrPrice = INGREDIENT_PRICES[type]
-
-    this.setState( {
-      ingredients: updatedIngredients,
-      totalPrice: added ? oldPrice + ingrPrice : oldPrice - ingrPrice
-    } )
-  }
-
   orderContinueHandler = () => {
 
     this.props.history.push(
@@ -82,22 +59,23 @@ class BurgerBuilder extends Component {
       <Aux>
         <Burger ingredients={this.props.ings}/>
         <BuildControls
-          ingredientChange={this.changeIngredientHandler}
+          ingredientAdded={this.props.onIngrAdded}
+          ingredientRemoved={this.props.onIngrRemoved}
           ingredients={this.props.ings}
-          price={this.state.totalPrice}
+          price={4}
           orderClicked={this.orderHandler}
         />
       </Aux>
     )
 
-    let orderSummary = !this.props.ings ? null : (
-      <OrderSummary
-        ingredients={this.props.ings}
-        totalPrice={this.state.totalPrice}
-        continue={this.orderContinueHandler}
-        cancel={this.orderHandler}
-      />
-    )
+    // let orderSummary = !this.props.ings ? null : (
+    //   <OrderSummary
+    //     ingredients={this.props.ings}
+    //     totalPrice={this.state.totalPrice}
+    //     continue={this.orderContinueHandler}
+    //     cancel={this.orderHandler}
+    //   />
+    // )
 
     // if (this.state.loading) {
     //
@@ -107,7 +85,7 @@ class BurgerBuilder extends Component {
     return (
       <Aux>
         <Modal show={this.state.ordered} modalClosed={this.orderHandler}>
-          {orderSummary}
+          {/*{orderSummary}*/}
         </Modal>
         {burger}
       </Aux>
