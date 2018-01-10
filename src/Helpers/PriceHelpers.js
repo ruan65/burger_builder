@@ -7,4 +7,4 @@ export const INITIAL_PRICE = 4
 export const getIngredientsPrices = (ingredients) => !ingredients ? 0 :
   Object.keys( ingredients )
     .map( ingr => INGREDIENT_PRICES[ingr] * ingredients[ingr] )
-    .reduce( ( total, ingrPrice ) => total + ingrPrice, 0 )
+    .reduce( ( total, ingrPrice  ) => total + ingrPrice, 0 )
