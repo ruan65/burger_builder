@@ -11,30 +11,30 @@ import { orderFormMockUp } from '../../../Helpers/OrderForm'
 import { getIngredientsPrices, INITIAL_PRICE } from '../../../Helpers/PriceHelpers'
 
 class ContactData extends Component {
-
+  
   state = {
     orderForm: orderFormMockUp,
     enableSubmitButton: false
   }
-
-  orderHandler = (event) => {
+  
+  orderHandler = ( event ) => {
     event.preventDefault()
-
+    
     this.setState( { loading: true } )
-
+    
     const formData = {}
-
-    for (let formElemId in this.state.orderForm) {
-
+    
+    for ( let formElemId in this.state.orderForm ) {
+      
       formData[formElemId] = this.state.orderForm[formElemId].value
     }
-
+    
     const order = {
       ingredients: this.props.ings,
       totalPrice: INITIAL_PRICE + getIngredientsPrices( this.props.ings ),
       orderData: formData
     }
-
+    
     AxiosOrders.post( '/orders.json', order )
       .then( response => {
         console.log( response )
@@ -42,33 +42,32 @@ class ContactData extends Component {
       } )
       .catch( err => {
         console.log( err )
+        this.setState( { loading: false } )
       } )
-      .finally( () => this.setState( { loading: false } )
-      )
   }
-
-  checkValidity(value, rules) {
-
-    if (!rules || !rules.required) return true
-
+  
+  checkValidity( value, rules ) {
+    
+    if ( !rules || !rules.required ) return true
+    
     let valid = value.trim() !== ''
-
-    if (rules.minLength) {
+    
+    if ( rules.minLength ) {
       valid = value.length >= rules.minLength && valid
     }
-    if (rules.maxLength) {
+    if ( rules.maxLength ) {
       valid = value.length <= rules.maxLength && valid
     }
     return valid
   }
-
-  inputChangedHandler = (event, inputId) => {
-
+  
+  inputChangedHandler = ( event, inputId ) => {
+    
     const value = event.target.value
-
+    
     const updatedForm = { ...this.state.orderForm }
     const updatedFormElement = { ...updatedForm[inputId] }
-
+    
     updatedFormElement.touched = true
     updatedFormElement.value = value
     updatedFormElement.valid = this.checkValidity( value, updatedFormElement.validation )
@@ -80,29 +79,29 @@ class ContactData extends Component {
       enableSubmitButton: submitEnable
     } )
   }
-
-  checkFormValidity(form) {
-
+  
+  checkFormValidity( form ) {
+    
     return Object.values( form )
       .map( el => el.validation ? el.valid : true )
-      .reduce( (valid, el) => valid && el )
+      .reduce( ( valid, el ) => valid && el )
   }
-
+  
   render() {
-
+    
     const formElementsArray = []
-
-    for (let key in this.state.orderForm) {
-
+    
+    for ( let key in this.state.orderForm ) {
+      
       formElementsArray.push( { id: key, config: this.state.orderForm[key] } )
     }
-
+    
     const form = this.state && this.state.loading ? <Spinner/> :
       <div className={classes.ContactData}>
         <h4>Enter your data</h4>
         <form onSubmit={this.orderHandler}>
           {
-            formElementsArray.map( (formElement, i) => {
+            formElementsArray.map( ( formElement, i ) => {
                 const config = formElement.config
                 return (
                   <Input
@@ -113,7 +112,7 @@ class ContactData extends Component {
                     shouldValidate={config.validation}
                     touched={config.touched}
                     invalid={!config.valid}
-                    changed={(event) => this.inputChangedHandler( event, formElement.id )}
+                    changed={( event ) => this.inputChangedHandler( event, formElement.id )}
                   />
                 )
               }
@@ -125,7 +124,7 @@ class ContactData extends Component {
           >ORDER</Button>
         </form>
       </div>
-    return (this.props.ings ? form : null)
+    return ( this.props.ings ? form : null )
   }
 }
 
@@ -135,4 +134,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect( mapStateToProps, null )( withErrorHandler(ContactData, AxiosOrders) )
+export default connect( mapStateToProps, null )( withErrorHandler( ContactData, AxiosOrders ) )
