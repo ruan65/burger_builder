@@ -41,13 +41,7 @@ class BurgerBuilder extends Component {
   }
   
   orderContinueHandler = () => {
-    
-    this.props.history.push(
-      {
-        pathname: '/checkout',
-        state: this.props.ings
-      }
-    )
+    this.props.history.push('/checkout')
   }
   
   render() {

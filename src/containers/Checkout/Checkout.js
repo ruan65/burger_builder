@@ -2,31 +2,28 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
 import ContactData from './ContactData/ContactData'
+import { connect } from 'react-redux'
 
 class Checkout extends Component {
-  
-  componentWillMount() {
-    this.setState( { ingredients: this.props.location.state } )
-  }
-  
+
   checkoutCancelledHandler = () => {
     this.props.history.goBack()
   }
-  
+
   checkoutContinuedHandler = () => {
-    this.props.history.replace( '/checkout/contact-data' )
-    
+    this.props.history.replace( this.props.match.path + '/contact-data' )
+
   }
-  
+
   render() {
-    return ( this.state.ingredients ?
+    return (this.props.ingredients ?
         <div>
-          <CheckoutSummary ingredients={this.state.ingredients}
+          <CheckoutSummary ingredients={this.props.ingredients}
                            checkoutCancelled={this.checkoutCancelledHandler}
                            checkoutContinued={this.checkoutContinuedHandler}
           />
           <Route path={this.props.match.path + '/contact-data'}
-                 render={(props) => <ContactData ingredients={this.state.ingredients} {...props}/>}
+                 render={(props) => <ContactData />}
           />
         </div>
         : <h2>Nothing interesting here if you just entered url.</h2>
@@ -34,4 +31,10 @@ class Checkout extends Component {
   }
 }
 
-export default Checkout
+const mapStateToProps = state => {
+  return {
+    ingredients: state.ingredients
+  }
+}
+
+export default connect( mapStateToProps )( Checkout )
