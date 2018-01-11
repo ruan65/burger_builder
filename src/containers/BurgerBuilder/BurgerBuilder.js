@@ -19,23 +19,6 @@ class BurgerBuilder extends Component {
     error: false
   }
   
-  componentDidMount() {
-    
-    // AxiosOrders.get( '/ingredients.json' )
-    //   .then( resp => {
-    //     this.setState( { ingredients: resp.data } )
-    //
-    //     if ( this.state.ingredients ) {
-    //
-    //       this.setState( { totalPrice: INITIAL_PRICE + getIngredientsPrices( this.state.ingredients ) } )
-    //     }
-    //
-    //   } )
-    //   .catch( err => {
-    //     this.setState( { error: true } )
-    //   } )
-  }
-  
   orderHandler = () => {
     this.setState( { ordered: !this.state.ordered } )
   }

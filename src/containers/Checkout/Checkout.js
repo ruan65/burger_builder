@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
 import ContactData from './ContactData/ContactData'
 import { connect } from 'react-redux'
+import BurgerBuilder from "../BurgerBuilder/BurgerBuilder";
 
 class Checkout extends Component {
 
@@ -23,7 +24,8 @@ class Checkout extends Component {
                            checkoutContinued={this.checkoutContinuedHandler}
           />
           <Route path={this.props.match.path + '/contact-data'}
-                 render={(props) => <ContactData />}
+                 exact
+                 component={ContactData}
           />
         </div>
         : <h2>Nothing interesting here if you just entered url.</h2>
