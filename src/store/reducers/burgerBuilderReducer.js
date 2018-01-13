@@ -1,8 +1,8 @@
-import Action from './Actions'
+import Action from '../actions/ActionTypes'
 import {
   getIngredientsPrices, INGREDIENT_PRICES, INITIAL_PRICE
 }
-  from "../Helpers/PriceHelpers";
+  from "../../Helpers/PriceHelpers";
 
 const initialState = {
   ingredients: {
