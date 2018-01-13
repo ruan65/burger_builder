@@ -6,17 +6,19 @@ import Aux from '../../hoc/Aux'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Order/OrderSummary/OrderSummary'
-import AxiosOrders from '../../AxiosOrders'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler'
-import Actions from '../../store/actions/ActionTypes'
+import {addIngredient, removeIngredient, initIngredients} from '../../store/actions/indexActions'
+import axiosBurgerBuilder from '../../AxiosOrders'
 
 class BurgerBuilder extends Component {
   
   state = {
-    ordered: false,
-    loading: false,
-    error: false
+    ordered: false
+  }
+  
+  componentDidMount() {
+    this.props.initIngredients()
   }
   
   orderHandler = () => {
@@ -24,14 +26,14 @@ class BurgerBuilder extends Component {
   }
   
   orderContinueHandler = () => {
-    this.props.history.push('/checkout')
+    this.props.history.push( '/checkout' )
   }
   
   render() {
     
     let burger = ( !this.props.ings
         ?
-        ( this.state.error ? <p style={{ color: 'red', margin: '20px' }}>Ingredients can not be loaded!</p> :
+        ( this.props.error ? <p style={{ color: 'red', margin: '20px' }}>Ingredients can not be loaded!</p> :
           <Spinner/> )
         :
         <Aux>
@@ -54,11 +56,11 @@ class BurgerBuilder extends Component {
         cancel={this.orderHandler}
       />
     )
-    
-    if ( this.state.loading ) {
-      
-      orderSummary = <Spinner/>
-    }
+    //
+    // if ( this.state.loading ) {
+    //
+    //   orderSummary = <Spinner/>
+    // }
     
     return (
       <Aux>
@@ -74,15 +76,17 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.ingredients,
-    price: state.totalPrice
+    price: state.totalPrice,
+    error: state.error
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngrAdded: ( name ) => dispatch( { type: Actions.ADD_INGREDIENT, ingredientName: name } ),
-    onIngrRemoved: ( name ) => dispatch( { type: Actions.REMOVE_INGREDIENT, ingredientName: name } )
+    initIngredients: ()     => dispatch(initIngredients()),
+    onIngrAdded: ( name )   => dispatch( addIngredient( name ) ),
+    onIngrRemoved: ( name ) => dispatch( removeIngredient( name ) )
   }
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( withErrorHandler( BurgerBuilder, AxiosOrders ) )
+export default connect( mapStateToProps, mapDispatchToProps )( withErrorHandler( BurgerBuilder, axiosBurgerBuilder ) )

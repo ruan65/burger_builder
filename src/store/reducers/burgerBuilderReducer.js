@@ -1,48 +1,59 @@
-import Action from '../actions/ActionTypes'
+import * as Action from '../actions/ActionTypes'
 import {
   getIngredientsPrices, INGREDIENT_PRICES, INITIAL_PRICE
 }
   from "../../Helpers/PriceHelpers";
 
 const initialState = {
-  ingredients: {
-    bacon: 0,
-    cheese: 0,
-    meat: 0,
-    salad: 0
-  },
-  totalPrice: INITIAL_PRICE
+  ingredients: null,
+  totalPrice: INITIAL_PRICE,
+  error: false
 }
-
 
 const reducer = ( state = initialState, action ) => {
   
-  const count = state.ingredients[action.ingredientName]
-  let num
-  
   switch ( action.type ) {
     
+    case Action.SET_INGREDIENTS:
+      
+      return {
+        ...state,
+        ingredients: action.ingredients,
+        error: false
+      }
+    
+    case Action.FETCH_INGREDIENTS_FAILED:
+      
+      return {
+        ...state,
+        error: true
+      }
+    
     case Action.ADD_INGREDIENT:
-      num =  count < 3 ? count + 1 : count
-      break
+      const count = state.ingredients[action.ingredientName]
+      const ingredients = {
+        ...state.ingredients,
+        [action.ingredientName]: count < 3 ? count + 1 : count
+      }
+      return {
+        ...state,
+        ingredients,
+        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
+      }
     
     case Action.REMOVE_INGREDIENT:
-      num = count > 0 ? count - 1 : count
-      break
-    
+      const count_r = state.ingredients[action.ingredientName]
+      const ingredients_r = {
+        ...state.ingredients,
+        [action.ingredientName]: count_r > 0 ? count_r - 1 : count_r
+      }
+      return {
+        ...state,
+        ingredients: ingredients_r,
+        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients_r )
+      }
     default:
       return state
-  }
-  
-  const ingredients = {
-    ...state.ingredients,
-    [action.ingredientName]: num
-  }
-  
-  return {
-    ...state,
-    ingredients: ingredients,
-    totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
   }
 }
 
