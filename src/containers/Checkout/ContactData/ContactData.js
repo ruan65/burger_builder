@@ -9,6 +9,7 @@ import withErrorHandler from '../../../hoc/withErrorHandler'
 
 import { orderFormMockUp } from '../../../Helpers/OrderForm'
 import { getIngredientsPrices, INITIAL_PRICE } from '../../../Helpers/PriceHelpers'
+import { purchaseBurger } from '../../../store/actions/indexActions'
 
 class ContactData extends Component {
   
@@ -19,8 +20,6 @@ class ContactData extends Component {
   
   orderHandler = ( event ) => {
     event.preventDefault()
-    
-    this.setState( { loading: true } )
     
     const formData = {}
     
@@ -35,15 +34,7 @@ class ContactData extends Component {
       orderData: formData
     }
     
-    AxiosOrders.post( '/orders.json', order )
-      .then( response => {
-        console.log( response )
-        this.props.history.push( '/' )
-      } )
-      .catch( err => {
-        console.log( err )
-        this.setState( { loading: false } )
-      } )
+    this.props.onPurchaseBurger(order)
   }
   
   checkValidity( value, rules ) {
@@ -73,7 +64,6 @@ class ContactData extends Component {
     updatedFormElement.valid = this.checkValidity( value, updatedFormElement.validation )
     updatedForm[inputId] = updatedFormElement
     const submitEnable = this.checkFormValidity( updatedForm )
-    console.log( submitEnable )
     this.setState( {
       orderForm: updatedForm,
       enableSubmitButton: submitEnable
@@ -96,7 +86,7 @@ class ContactData extends Component {
       formElementsArray.push( { id: key, config: this.state.orderForm[key] } )
     }
     
-    const form = this.state && this.state.loading ? <Spinner/> :
+    const form = this.props.loading ? <Spinner/> :
       <div className={classes.ContactData}>
         <h4>Enter your data</h4>
         <form onSubmit={this.orderHandler}>
@@ -130,8 +120,15 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients
+    ings: state.burgerBuilderReducer.ingredients,
+    loading: state.orderReducer.loading
   }
 }
 
-export default connect( mapStateToProps, null )( withErrorHandler( ContactData, AxiosOrders ) )
+const mapDispatchToProps = dispatch => {
+  return {
+    onPurchaseBurger: order =>  purchaseBurger(order)
+  }
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )( withErrorHandler( ContactData, AxiosOrders ) )

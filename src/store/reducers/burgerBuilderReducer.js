@@ -1,4 +1,4 @@
-import * as Action from '../actions/ActionTypes'
+import * as actionTypes from '../actions/ActionTypes'
 import {
   getIngredientsPrices, INGREDIENT_PRICES, INITIAL_PRICE
 }
@@ -14,7 +14,7 @@ const reducer = ( state = initialState, action ) => {
   
   switch ( action.type ) {
     
-    case Action.SET_INGREDIENTS:
+    case actionTypes.SET_INGREDIENTS:
       
       return {
         ...state,
@@ -22,14 +22,14 @@ const reducer = ( state = initialState, action ) => {
         error: false
       }
     
-    case Action.FETCH_INGREDIENTS_FAILED:
+    case actionTypes.FETCH_INGREDIENTS_FAILED:
       
       return {
         ...state,
         error: true
       }
     
-    case Action.ADD_INGREDIENT:
+    case actionTypes.ADD_INGREDIENT:
       const count = state.ingredients[action.ingredientName]
       const ingredients = {
         ...state.ingredients,
@@ -41,7 +41,7 @@ const reducer = ( state = initialState, action ) => {
         totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
       }
     
-    case Action.REMOVE_INGREDIENT:
+    case actionTypes.REMOVE_INGREDIENT:
       const count_r = state.ingredients[action.ingredientName]
       const ingredients_r = {
         ...state.ingredients,
