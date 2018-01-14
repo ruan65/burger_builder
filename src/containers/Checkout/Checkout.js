@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
 import ContactData from './ContactData/ContactData'
 import { connect } from 'react-redux'
-import BurgerBuilder from "../BurgerBuilder/BurgerBuilder";
 
 class Checkout extends Component {
 
@@ -17,6 +16,7 @@ class Checkout extends Component {
   }
 
   render() {
+    
     return (this.props.ingredients ?
         <div>
           <CheckoutSummary ingredients={this.props.ingredients}
@@ -28,7 +28,8 @@ class Checkout extends Component {
                  component={ContactData}
           />
         </div>
-        : <h2>Nothing interesting here if you just entered url.</h2>
+        // : <h2>Nothing interesting here if you just entered url.</h2>
+      : <Redirect to='/'/>
     )
   }
 }

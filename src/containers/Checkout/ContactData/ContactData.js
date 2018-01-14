@@ -127,7 +127,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPurchaseBurger: order =>  purchaseBurger(order)
+    onPurchaseBurger: order =>  dispatch(purchaseBurger(order))
   }
 }
 

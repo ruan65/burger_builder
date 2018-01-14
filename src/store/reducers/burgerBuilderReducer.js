@@ -1,8 +1,5 @@
 import * as actionTypes from '../actions/ActionTypes'
-import {
-  getIngredientsPrices, INGREDIENT_PRICES, INITIAL_PRICE
-}
-  from "../../Helpers/PriceHelpers";
+import { getIngredientsPrices, INITIAL_PRICE } from "../../Helpers/PriceHelpers";
 
 const initialState = {
   ingredients: null,

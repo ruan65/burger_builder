@@ -36,7 +36,7 @@ export const orderFormMockUp = {
     validation: {
       required: true,
       minLength: 5,
-      maxLength: 5
+      maxLength: 6
     },
     valid: false,
     touched: false

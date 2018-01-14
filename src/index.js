@@ -19,10 +19,9 @@ const rootReducer = combineReducers(
   }
 )
 
-const store = createStore(rootReducer, composeEnhancers(
-  applyMiddleware(
-    thunk
-  )))
+const enhancer = composeEnhancers( applyMiddleware( thunk ) )
+
+const store = createStore( rootReducer, enhancer)
 
 ReactDOM.render(
   <Provider store={store}>
