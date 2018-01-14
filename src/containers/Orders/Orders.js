@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Order from './Order/Order'
+import Spinner from '../../components/UI/Spinner/Spinner'
 import AxiosOrders from "../../AxiosOrders"
 import withErrorHandler from '../../hoc/withErrorHandler'
 import { fetchOrders } from '../../store/actions/indexActions'
@@ -18,7 +19,8 @@ class Orders extends Component {
       
       if(this.props.orders) {
         
-        orders = Object.entries( this.props.orders )
+        orders = this.props.loading ? <Spinner/> :
+          Object.entries( this.props.orders )
           .map( order => <Order order={order[1]} key={order[0]}/> )
       }
     

@@ -16,7 +16,7 @@ export const purchaseBurgerSuccess = ( orderId, orderData ) => {
 }
 
 export const purchaseBurgerFail = error => {
-  console.log(error)
+  console.log( error )
   return {
     type: actionTypes.PURCHASE_BURGER_FAILURE,
     error
@@ -30,10 +30,9 @@ export const purchaseBurgerStart = () => {
 }
 
 export const purchaseBurger = ( order ) => {
-  
   return ( dispatch ) => {
     
-    purchaseBurgerStart()
+    dispatch( purchaseBurgerStart() )
     
     axios.post( '/orders.json', order )
       .then( response =>
@@ -65,7 +64,9 @@ export const fetchOrdersFailed = ( error ) => {
 
 export const fetchOrders = () => {
   return dispatch => {
-    fetchOrdersStart()
+    
+    dispatch( fetchOrdersStart() )
+    
     axios.get( '/orders.json' )
       .then( response => dispatch( fetchOrdersSuccess( response.data ) ) )
       .catch( err => dispatch( fetchOrdersFailed( err ) ) )
