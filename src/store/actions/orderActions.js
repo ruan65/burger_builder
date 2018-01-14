@@ -16,6 +16,7 @@ export const purchaseBurgerSuccess = ( orderId, orderData ) => {
 }
 
 export const purchaseBurgerFail = error => {
+  console.log(error)
   return {
     type: actionTypes.PURCHASE_BURGER_FAILURE,
     error
@@ -37,8 +38,7 @@ export const purchaseBurger = ( order ) => {
     axios.post( '/orders.json', order )
       .then( response =>
         dispatch( purchaseBurgerSuccess( response.data.name, order ) ) )
-      .catch( err =>
-        dispatch( purchaseBurgerFail( err ) ) )
+      .catch( err => dispatch( purchaseBurgerFail( err ) ) )
   }
 }
 
@@ -48,14 +48,15 @@ export const fetchOrdersStart = () => {
   }
 }
 
-export const fetchOrdersSuccess = (orders) => {
+export const fetchOrdersSuccess = ( orders ) => {
   return {
     type: actionTypes.FETCH_ORDERS_SUCCESS,
     orders
   }
 }
 
-export const fetchOrdersFailed = (error) => {
+export const fetchOrdersFailed = ( error ) => {
+  console.log( error )
   return {
     type: actionTypes.FETCH_ORDERS_FAILED,
     error
@@ -65,8 +66,8 @@ export const fetchOrdersFailed = (error) => {
 export const fetchOrders = () => {
   return dispatch => {
     fetchOrdersStart()
-    axios.get('/orders.json')
-      .then(response => dispatch(fetchOrdersSuccess(response.data)))
-      .catch(err => dispatch(fetchOrdersFailed(err)))
+    axios.get( '/orders.json' )
+      .then( response => dispatch( fetchOrdersSuccess( response.data ) ) )
+      .catch( err => dispatch( fetchOrdersFailed( err ) ) )
   }
 }

@@ -4,7 +4,7 @@ const initialState = {
   orders: [],
   loading: false,
   purchased: false,
-  error: null
+  error: false
 }
 
 const reducer = (state = initialState, action) => {
