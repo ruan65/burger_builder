@@ -16,6 +16,7 @@ const reducer = ( state = initialState, action ) => {
       return {
         ...state,
         ingredients: action.ingredients,
+        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients ),
         error: false
       }
     
