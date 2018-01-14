@@ -1,5 +1,6 @@
 import * as actionTypes from '../actions/ActionTypes'
 import { getIngredientsPrices, INITIAL_PRICE } from "../../Helpers/PriceHelpers";
+import { updateObj } from "../Utils";
 
 const initialState = {
   ingredients: null,
@@ -12,20 +13,15 @@ const reducer = ( state = initialState, action ) => {
   switch ( action.type ) {
     
     case actionTypes.SET_INGREDIENTS:
-      
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients ),
-        error: false
-      }
+      return updateObj( state,
+        {
+          ingredients: action.ingredients,
+          totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients ),
+          error: false
+        } )
     
     case actionTypes.FETCH_INGREDIENTS_FAILED:
-      
-      return {
-        ...state,
-        error: true
-      }
+      return updateObj( state, { error: true } )
     
     case actionTypes.ADD_INGREDIENT:
       const count = state.ingredients[action.ingredientName]
@@ -33,11 +29,11 @@ const reducer = ( state = initialState, action ) => {
         ...state.ingredients,
         [action.ingredientName]: count < 3 ? count + 1 : count
       }
-      return {
-        ...state,
-        ingredients,
-        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
-      }
+      return updateObj( state,
+        {
+          ingredients,
+          totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
+        } )
     
     case actionTypes.REMOVE_INGREDIENT:
       const count_r = state.ingredients[action.ingredientName]
@@ -45,11 +41,11 @@ const reducer = ( state = initialState, action ) => {
         ...state.ingredients,
         [action.ingredientName]: count_r > 0 ? count_r - 1 : count_r
       }
-      return {
-        ...state,
+      return updateObj(state, {
         ingredients: ingredients_r,
         totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients_r )
-      }
+      })
+    
     default:
       return state
   }
