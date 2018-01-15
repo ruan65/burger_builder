@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Button from '../../../components/UI/Button/CustomButton'
+import Button, { ButtonType  } from '../../../components/UI/Button/CustomButton'
 import classes from './ContactData.css'
 import AxiosOrders from '../../../AxiosOrders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
@@ -7,91 +7,69 @@ import Input from '../../../components/UI/Input/Input'
 import { connect } from 'react-redux'
 import withErrorHandler from '../../../hoc/withErrorHandler'
 
-import { orderFormMockUp } from '../../../Helpers/OrderForm'
+import { orderForm, checkFormValidity, checkValidity } from '../../../Helpers/Forms'
 import { getIngredientsPrices, INITIAL_PRICE } from '../../../Helpers/PriceHelpers'
 import { purchaseBurger } from '../../../store/actions/indexActions'
 
 class ContactData extends Component {
-  
+
   state = {
-    orderForm: orderFormMockUp,
+    orderForm,
     enableSubmitButton: false
   }
-  
-  orderHandler = ( event ) => {
+
+  orderHandler = (event) => {
     event.preventDefault()
-    
+
     const formData = {}
-    
-    for ( let formElemId in this.state.orderForm ) {
-      
+
+    for (let formElemId in this.state.orderForm) {
+
       formData[formElemId] = this.state.orderForm[formElemId].value
     }
-    
+
     const order = {
       ingredients: this.props.ings,
       totalPrice: INITIAL_PRICE + getIngredientsPrices( this.props.ings ),
       orderData: formData
     }
-    
-    this.props.onPurchaseBurger(order)
+
+    this.props.onPurchaseBurger( order )
   }
-  
-  checkValidity( value, rules ) {
-    
-    if ( !rules || !rules.required ) return true
-    
-    let valid = value.trim() !== ''
-    
-    if ( rules.minLength ) {
-      valid = value.length >= rules.minLength && valid
-    }
-    if ( rules.maxLength ) {
-      valid = value.length <= rules.maxLength && valid
-    }
-    return valid
-  }
-  
-  inputChangedHandler = ( event, inputId ) => {
-    
+
+  inputChangedHandler = (event, inputId) => {
+
     const value = event.target.value
-    
+
     const updatedForm = { ...this.state.orderForm }
     const updatedFormElement = { ...updatedForm[inputId] }
-    
+
     updatedFormElement.touched = true
     updatedFormElement.value = value
-    updatedFormElement.valid = this.checkValidity( value, updatedFormElement.validation )
+    updatedFormElement.valid = checkValidity( value, updatedFormElement.validation )
     updatedForm[inputId] = updatedFormElement
-    const submitEnable = this.checkFormValidity( updatedForm )
+    const submitEnable = checkFormValidity( updatedForm )
     this.setState( {
       orderForm: updatedForm,
       enableSubmitButton: submitEnable
     } )
   }
-  
-  checkFormValidity( form ) {
-    
-    return Object.values( form )
-      .map( el => el.validation ? el.valid : true )
-      .reduce( ( valid, el ) => valid && el )
-  }
-  
+
   render() {
-    
+
     const formElementsArray = []
-    
-    for ( let key in this.state.orderForm ) {
-      
+
+    for (let key in this.state.orderForm) {
+
       formElementsArray.push( { id: key, config: this.state.orderForm[key] } )
     }
-    
+
     const form = this.props.loading ? <Spinner/> :
       <div className={classes.ContactData}>
         <h4>Enter your data</h4>
         <form onSubmit={this.orderHandler}>
           {
-            formElementsArray.map( ( formElement, i ) => {
+            formElementsArray.map( (formElement, i) => {
                 const config = formElement.config
                 return (
                   <Input
@@ -102,19 +80,19 @@ class ContactData extends Component {
                     shouldValidate={config.validation}
                     touched={config.touched}
                     invalid={!config.valid}
-                    changed={( event ) => this.inputChangedHandler( event, formElement.id )}
+                    changed={(event) => this.inputChangedHandler( event, formElement.id )}
                   />
                 )
               }
             )
           }
           <Button
-            btnType='Success'
+            btnType={ButtonType.Success}
             disabled={!this.state.enableSubmitButton}
           >ORDER</Button>
         </form>
       </div>
-    return ( this.props.ings ? form : null )
+    return (this.props.ings ? form : null)
   }
 }
 
@@ -127,7 +105,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPurchaseBurger: order =>  dispatch(purchaseBurger(order))
+    onPurchaseBurger: order => dispatch( purchaseBurger( order ) )
   }
 }
 
