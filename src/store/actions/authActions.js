@@ -1,5 +1,10 @@
 import * as actionTypes from './ActionTypes'
-import axios from '../../AxiosOrders'
+import axios from 'axios'
+import { firebaseApiKey } from '../../appSettings'
+
+const firebaseAuthUrl =
+  'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key='
+  + firebaseApiKey
 
 export const authStartAction = () => {
   return {
@@ -21,10 +26,26 @@ export const authFailedAction = error => {
   }
 }
 
-export const authAction = (email, password) => {
+export const authAction = ( email, password ) => {
   return dispatch => {
-
-    console.log(email, password)
-    dispatch(authStartAction())
+    
+    dispatch( authStartAction() )
+    
+    const data = {
+      email,
+      password,
+      returnSecureToken: true
+    }
+    
+    axios.post( firebaseAuthUrl, data )
+      .then(response => {
+        
+        console.log(response)
+        dispatch(authSuccessAction(response.data))
+      })
+      .catch(error => {
+        console.log(error)
+        dispatch(authFailedAction(error))
+      })
   }
 }

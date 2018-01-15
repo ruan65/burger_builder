@@ -5,21 +5,18 @@ import { authForm, checkFormValidity, checkValidity, email } from '../../Helpers
 import Input from '../../components/UI/Input/Input'
 import Button, { ButtonType } from '../../components/UI/Button/CustomButton'
 import { connect } from 'react-redux'
-import withErrorHandler from '../../hoc/withErrorHandler'
 import { authAction } from '../../store/actions/indexActions'
 
-import axios from '../../AxiosOrders'
-
 class Auth extends Component {
-
+  
   state = {
     controls: authForm
   }
-
-  inputChangedHandler = (event, controlName) => {
-
+  
+  inputChangedHandler = ( event, controlName ) => {
+    
     const value = event.target.value
-
+    
     const updatedControls = {
       ...this.state.controls,
       [controlName]: {
@@ -29,27 +26,27 @@ class Auth extends Component {
         touched: true
       }
     }
-
+    
     this.setState( { controls: updatedControls } )
   }
-
-  authHandler = (ev) => {
-
+  
+  authHandler = ( ev ) => {
+    
     ev.preventDefault()
-
+    
     this.props.onAuth( this.state.controls.email.value, this.state.controls.password.value )
   }
-
+  
   render() {
-
+    
     const formElementsArray = []
-
-    for (let key in this.state.controls) {
-
+    
+    for ( let key in this.state.controls ) {
+      
       formElementsArray.push( { id: key, config: this.state.controls[key] } )
     }
-
-    const formElements = formElementsArray.map( (formElement, i) => {
+    
+    const formElements = formElementsArray.map( ( formElement, i ) => {
         const config = formElement.config
         return (
           <Input
@@ -60,12 +57,12 @@ class Auth extends Component {
             shouldValidate={config.validation}
             touched={config.touched}
             invalid={!config.valid}
-            changed={(event) => this.inputChangedHandler( event, formElement.id )}
+            changed={( event ) => this.inputChangedHandler( event, formElement.id )}
           />
         )
       }
     )
-
+    
     return (
       <div className={classes.Auth}>
         <form onSubmit={this.authHandler}>
@@ -80,8 +77,8 @@ class Auth extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, pwd) => dispatch( authAction( email, pwd ) )
+    onAuth: ( email, pwd ) => dispatch( authAction( email, pwd ) )
   }
 }
 
-export default connect( null, mapDispatchToProps )( withErrorHandler( Auth, axios ) )
+export default connect( null, mapDispatchToProps )( Auth )
