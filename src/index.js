@@ -8,6 +8,7 @@ import './index.css';
 import App from './App';
 import burgerBuilderReducer from './store/reducers/burgerBuilderReducer'
 import orderReducer from './store/reducers/orderReducer'
+import authReducer from './store/reducers/authReducer'
 import registerServiceWorker from './registerServiceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -15,7 +16,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const rootReducer = combineReducers(
   {
     burgerBuilderReducer,
-    orderReducer
+    orderReducer,
+    authReducer
   }
 )
 

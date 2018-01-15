@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import classes from './Auth.css'
-import { authForm, checkFormValidity, checkValidity } from '../../Helpers/Forms'
+import { authForm, checkFormValidity, checkValidity, email } from '../../Helpers/Forms'
 
 import Input from '../../components/UI/Input/Input'
 import Button, { ButtonType } from '../../components/UI/Button/CustomButton'
+import { connect } from 'react-redux'
+import withErrorHandler from '../../hoc/withErrorHandler'
+import { authAction } from '../../store/actions/indexActions'
+
+import axios from '../../AxiosOrders'
 
 class Auth extends Component {
 
@@ -17,15 +22,22 @@ class Auth extends Component {
 
     const updatedControls = {
       ...this.state.controls,
-      [controlName] : {
+      [controlName]: {
         ...this.state.controls[controlName],
         value: event.target.value,
-        valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
+        valid: checkValidity( event.target.value, this.state.controls[controlName].validation ),
         touched: true
       }
     }
 
-    this.setState({controls: updatedControls})
+    this.setState( { controls: updatedControls } )
+  }
+
+  authHandler = (ev) => {
+
+    ev.preventDefault()
+
+    this.props.onAuth( this.state.controls.email.value, this.state.controls.password.value )
   }
 
   render() {
@@ -56,13 +68,20 @@ class Auth extends Component {
 
     return (
       <div className={classes.Auth}>
-        <form>
+        <form onSubmit={this.authHandler}>
           {formElements}
-          <Button btnType={ButtonType.Success}>SUBMIT</Button>
+          <Button btnType={ButtonType.Success}
+          >SUBMIT</Button>
         </form>
       </div>
     )
   }
 }
 
-export default Auth
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, pwd) => dispatch( authAction( email, pwd ) )
+  }
+}
+
+export default connect( null, mapDispatchToProps )( withErrorHandler( Auth, axios ) )
