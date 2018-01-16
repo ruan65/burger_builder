@@ -2,9 +2,10 @@ import * as actionTypes from './ActionTypes'
 import axios from 'axios'
 import { firebaseApiKey } from '../../appSettings'
 
-const firebaseAuthUrl =
-  'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key='
-  + firebaseApiKey
+
+const firebaseSignInUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key='
+const firebaseSignUpUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key='
+
 
 export const authStartAction = () => {
   return {
@@ -26,7 +27,7 @@ export const authFailedAction = error => {
   }
 }
 
-export const authAction = ( email, password ) => {
+export const authAction = ( email, password, isSingUp ) => {
   return dispatch => {
     
     dispatch( authStartAction() )
@@ -37,7 +38,7 @@ export const authAction = ( email, password ) => {
       returnSecureToken: true
     }
     
-    axios.post( firebaseAuthUrl, data )
+    axios.post( (isSingUp ? firebaseSignUpUrl : firebaseSignInUrl) + firebaseApiKey, data )
       .then(response => {
         
         console.log(response)

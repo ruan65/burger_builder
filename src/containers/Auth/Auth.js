@@ -8,15 +8,16 @@ import { connect } from 'react-redux'
 import { authAction } from '../../store/actions/indexActions'
 
 class Auth extends Component {
-  
+
   state = {
-    controls: authForm
+    controls: authForm,
+    isSignUp: true
   }
-  
-  inputChangedHandler = ( event, controlName ) => {
-    
+
+  inputChangedHandler = (event, controlName) => {
+
     const value = event.target.value
-    
+
     const updatedControls = {
       ...this.state.controls,
       [controlName]: {
@@ -26,27 +27,38 @@ class Auth extends Component {
         touched: true
       }
     }
-    
+
     this.setState( { controls: updatedControls } )
   }
-  
-  authHandler = ( ev ) => {
-    
+
+  authHandler = (ev) => {
+
     ev.preventDefault()
-    
-    this.props.onAuth( this.state.controls.email.value, this.state.controls.password.value )
+
+    this.props.onAuth(
+      this.state.controls.email.value,
+      this.state.controls.password.value,
+      this.state.isSignUp
+    )
   }
-  
+
+  switchAuthModeHandler = () => {
+
+    this.setState( prevState => {
+      return { isSignUp: !prevState.isSignUp }
+    } )
+  }
+
   render() {
-    
+
     const formElementsArray = []
-    
-    for ( let key in this.state.controls ) {
-      
+
+    for (let key in this.state.controls) {
+
       formElementsArray.push( { id: key, config: this.state.controls[key] } )
     }
-    
-    const formElements = formElementsArray.map( ( formElement, i ) => {
+
+    const formElements = formElementsArray.map( (formElement, i) => {
         const config = formElement.config
         return (
           <Input
@@ -57,19 +69,22 @@ class Auth extends Component {
             shouldValidate={config.validation}
             touched={config.touched}
             invalid={!config.valid}
-            changed={( event ) => this.inputChangedHandler( event, formElement.id )}
+            changed={(event) => this.inputChangedHandler( event, formElement.id )}
           />
         )
       }
     )
-    
+
     return (
       <div className={classes.Auth}>
         <form onSubmit={this.authHandler}>
           {formElements}
-          <Button btnType={ButtonType.Success}
-          >SUBMIT</Button>
+          <Button btnType={ButtonType.Success}>{this.state.isSignUp ? 'SIGN UP' : 'SING IN'}</Button>
         </form>
+        <Button
+          btnType={ButtonType.Danger}
+          clicked={this.switchAuthModeHandler}
+        >SWITCH TO  "{this.state.isSignUp ? 'SING IN' : 'SIGN UP'}" </Button>
       </div>
     )
   }
@@ -77,7 +92,7 @@ class Auth extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: ( email, pwd ) => dispatch( authAction( email, pwd ) )
+    onAuth: (email, pwd, isSignUp) => dispatch( authAction( email, pwd, isSignUp ) )
   }
 }
 
