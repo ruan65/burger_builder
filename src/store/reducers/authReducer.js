@@ -1,6 +1,12 @@
 import * as actionTypes from '../actions/ActionTypes'
+import { updateObj } from '../Utils'
 
-const initialState = {}
+const initialState = {
+  token: null,
+  userId: null,
+  error: null,
+  loading: false
+}
 
 export const reducer = (state = initialState, action) => {
 
@@ -8,9 +14,20 @@ export const reducer = (state = initialState, action) => {
 
     case actionTypes.AUTH_START:
 
-      return {
-        ...state,
-      }
+      return updateObj(state, {error: null, loading: true})
+  
+    case actionTypes.AUTH_SUCCESS:
+    
+      return updateObj(state, {
+        error: null,
+        loading: false,
+        token: action.token,
+        userId: action.userId
+      })
+  
+    case actionTypes.AUTH_FAILED:
+    
+      return updateObj(state, {error: action.error, loading: false})
 
     default:
       return state

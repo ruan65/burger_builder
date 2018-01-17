@@ -4,6 +4,7 @@ import { authForm, checkFormValidity, checkValidity, email } from '../../Helpers
 
 import Input from '../../components/UI/Input/Input'
 import Button, { ButtonType } from '../../components/UI/Button/CustomButton'
+import Spinner from '../../components/UI/Spinner/Spinner'
 import { connect } from 'react-redux'
 import { authAction } from '../../store/actions/indexActions'
 
@@ -74,9 +75,16 @@ class Auth extends Component {
         )
       }
     )
+    
+    let errorMessage = null
+    
+    if (this.props.error) {
+      errorMessage = <p>{this.props.error.message}</p>
+    }
 
-    return (
+    return (this.props.loading ? <Spinner/> :
       <div className={classes.Auth}>
+        {errorMessage}
         <form onSubmit={this.authHandler}>
           {formElements}
           <Button btnType={ButtonType.Success}>{this.state.isSignUp ? 'SIGN UP' : 'SING IN'}</Button>
@@ -90,10 +98,17 @@ class Auth extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    error: state.authReducer.error,
+    loading: state.authReducer.loading
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, pwd, isSignUp) => dispatch( authAction( email, pwd, isSignUp ) )
   }
 }
 
-export default connect( null, mapDispatchToProps )( Auth )
+export default connect( mapStateToProps, mapDispatchToProps )( Auth )

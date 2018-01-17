@@ -13,10 +13,11 @@ export const authStartAction = () => {
   }
 }
 
-export const authSuccessAction = authData => {
+export const authSuccessAction = (token, userId) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    authData
+    token,
+    userId
   }
 }
 
@@ -42,11 +43,11 @@ export const authAction = ( email, password, isSingUp ) => {
       .then(response => {
         
         console.log(response)
-        dispatch(authSuccessAction(response.data))
+        dispatch(authSuccessAction(response.data.idToken, response.data.localId))
       })
       .catch(error => {
         console.log(error)
-        dispatch(authFailedAction(error))
+        dispatch(authFailedAction(error.response.data.error))
       })
   }
 }
