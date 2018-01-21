@@ -8,8 +8,9 @@ import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Order/OrderSummary/OrderSummary'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler'
-import { addIngredient, removeIngredient, initIngredients, purchaseInit } from '../../store/actions/indexActions'
 import axiosBurgerBuilder from '../../AxiosOrders'
+import { addIngredient, removeIngredient, initIngredients,
+  purchaseInit, setAuthRedirectAction } from '../../store/actions/indexActions'
 
 class BurgerBuilder extends Component {
   
@@ -22,7 +23,15 @@ class BurgerBuilder extends Component {
   }
   
   orderHandler = () => {
-    this.setState( { ordered: !this.state.ordered } )
+    if ( this.props.isAuthenticated ) {
+      
+      this.setState( { ordered: !this.state.ordered } )
+      
+    } else {
+      
+      this.props.onSetAuthRedirectPath('/checkout')
+      this.props.history.push('/auth')
+    }
   }
   
   orderContinueHandler = () => {
@@ -45,6 +54,7 @@ class BurgerBuilder extends Component {
             ingredients={this.props.ings}
             price={this.props.price}
             orderClicked={this.orderHandler}
+            isAuth={this.props.isAuthenticated}
           />
         </Aux>
     )
@@ -79,7 +89,8 @@ const mapStateToProps = state => {
     ings: state.burgerBuilderReducer.ingredients,
     price: state.burgerBuilderReducer.totalPrice,
     error: state.burgerBuilderReducer.error,
-    purchased: state.orderReducer.purchased
+    purchased: state.orderReducer.purchased,
+    isAuthenticated: state.authReducer.token !== null
   }
 }
 
@@ -88,7 +99,8 @@ const mapDispatchToProps = dispatch => {
     initIngredients: () => dispatch( initIngredients() ),
     onIngrAdded: ( name ) => dispatch( addIngredient( name ) ),
     onIngrRemoved: ( name ) => dispatch( removeIngredient( name ) ),
-    onPurchaseInit: () => dispatch( purchaseInit() )
+    onPurchaseInit: () => dispatch( purchaseInit() ),
+    onSetAuthRedirectPath: (path) => dispatch(setAuthRedirectAction(path))
   }
 }
 

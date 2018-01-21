@@ -5,7 +5,8 @@ import { updateObj } from "../Utils";
 const initialState = {
   ingredients: null,
   totalPrice: INITIAL_PRICE,
-  error: false
+  error: false,
+  building: true
 }
 
 const reducer = ( state = initialState, action ) => {
@@ -17,14 +18,17 @@ const reducer = ( state = initialState, action ) => {
         {
           ingredients: action.ingredients,
           totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients ),
-          error: false
+          error: false,
+          building: false
         } )
     
     case actionTypes.FETCH_INGREDIENTS_FAILED:
       return updateObj( state, { error: true } )
     
     case actionTypes.ADD_INGREDIENT:
+      
       const count = state.ingredients[action.ingredientName]
+      
       const ingredients = {
         ...state.ingredients,
         [action.ingredientName]: count < 3 ? count + 1 : count
@@ -32,7 +36,8 @@ const reducer = ( state = initialState, action ) => {
       return updateObj( state,
         {
           ingredients,
-          totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients )
+          totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients ),
+          building: true
         } )
     
     case actionTypes.REMOVE_INGREDIENT:
@@ -43,7 +48,8 @@ const reducer = ( state = initialState, action ) => {
       }
       return updateObj(state, {
         ingredients: ingredients_r,
-        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients_r )
+        totalPrice: INITIAL_PRICE + getIngredientsPrices( ingredients_r ),
+        building: true
       })
     
     default:
