@@ -17,8 +17,8 @@ class Auth extends Component {
   }
   
   componentDidMount() {
-    if (!this.props.buildingBurgerInProgress && this.props.authRedirectPath !== '/') {
-
+    if ( !this.props.buildingBurgerInProgress && this.props.authRedirectPath !== '/' ) {
+      
       this.props.onSetAuthRedirectPath()
     }
   }
@@ -60,6 +60,11 @@ class Auth extends Component {
   
   render() {
     
+    if (this.props.isAuthenticated) {
+
+      return <Redirect to={this.props.authRedirectPath}/>
+    }
+    
     const formElementsArray = []
     
     for ( let key in this.state.controls ) {
@@ -89,23 +94,21 @@ class Auth extends Component {
       errorMessage = <p>{this.props.error.message}</p>
     }
     
-    let content = <Redirect to={this.props.authRedirectPath}/>
     
-    if ( !this.props.isAuthenticated ) {
-      
-      content = this.props.loading ? <Spinner/> :
-        <div className={classes.Auth}>
-          {errorMessage}
-          <form onSubmit={this.authHandler}>
-            {formElements}
-            <Button btnType={ButtonType.Success}>{this.state.isSignUp ? 'SIGN UP' : 'SING IN'}</Button>
-          </form>
-          <Button
-            btnType={ButtonType.Danger}
-            clicked={this.switchAuthModeHandler}
-          >SWITCH TO "{this.state.isSignUp ? 'SING IN' : 'SIGN UP'}" </Button>
-        </div>
-    }
+    const content = this.props.loading ? <Spinner/> :
+      <div className={classes.Auth}>
+        {errorMessage}
+        <form onSubmit={this.authHandler}>
+          {formElements}
+          <Button btnType={ButtonType.Success}>{this.state.isSignUp ? 'SIGN UP' : 'SING IN'}</Button>
+        </form>
+        <Button
+          btnType={ButtonType.Danger}
+          clicked={this.switchAuthModeHandler}
+        >SWITCH TO "{this.state.isSignUp ? 'SING IN' : 'SIGN UP'}" </Button>
+      </div>
+    
+    
     return content
   }
 }
@@ -123,7 +126,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAuth: ( email, pwd, isSignUp ) => dispatch( authAction( email, pwd, isSignUp ) ),
-    onSetAuthRedirectPath: () => dispatch(setAuthRedirectAction('/'))
+    onSetAuthRedirectPath: () => dispatch( setAuthRedirectAction( '/' ) )
   }
 }
 

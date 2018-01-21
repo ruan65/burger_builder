@@ -16,24 +16,22 @@ class Checkout extends Component {
   }
   
   render() {
-    let summary = <Redirect to='/'/>
     
-    if ( this.props.ingredients ) {
-      
-      const purchasedRedirect = this.props.purchased ? <Redirect to='/' /> : null
-      summary =
-        <div>
-          {purchasedRedirect}
-          <CheckoutSummary ingredients={this.props.ingredients}
-                           checkoutCancelled={this.checkoutCancelledHandler}
-                           checkoutContinued={this.checkoutContinuedHandler}
-          />
-          <Route path={this.props.match.path + '/contact-data'}
-                 exact
-                 component={ContactData}
-          />
-        </div>
-    }
+    const purchasedRedirect = this.props.purchased ? <Redirect to='/'/> : null
+    
+    const summary =
+      <div>
+        {purchasedRedirect}
+        <CheckoutSummary ingredients={this.props.ingredients}
+                         checkoutCancelled={this.checkoutCancelledHandler}
+                         checkoutContinued={this.checkoutContinuedHandler}
+        />
+        <Route path={this.props.match.path + '/contact-data'}
+               exact
+               component={ContactData}
+        />
+      </div>
+    
     return summary
   }
 }
