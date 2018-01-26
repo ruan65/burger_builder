@@ -1,15 +1,15 @@
 import React from 'react'
-import NavItem from './NavigationItem/NavigationItem'
+import NavigationItem from './NavigationItem/NavigationItem'
 import classes from './NavigationItems.css'
 
 const navigationItems = ( props ) =>
   <div className={classes.NavigationItems}>
     
-    <NavItem to='/'>Burger Builder</NavItem>
-    {props.isAuth ? <NavItem to='/orders'>Orders</NavItem> : null}
+    <NavigationItem to='/'>Burger Builder</NavigationItem>
+    {props.isAuth ? <NavigationItem to='/orders'>Orders</NavigationItem> : null}
     {props.isAuth
-      ? <NavItem to='/logout'>Logout</NavItem>
-      : <NavItem to='/auth'>Login</NavItem>
+      ? <NavigationItem to='/logout'>Logout</NavigationItem>
+      : <NavigationItem to='/auth'>Login</NavigationItem>
     }
   </div>
 

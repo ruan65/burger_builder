@@ -12,14 +12,14 @@ import axiosBurgerBuilder from '../../AxiosOrders'
 import { addIngredient, removeIngredient, initIngredients,
   purchaseInit, setAuthRedirectAction } from '../../store/actions/indexActions'
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
   
   state = {
     ordered: false
   }
   
   componentDidMount() {
-    this.props.initIngredients()
+    this.props.onInitIngredients()
   }
   
   orderHandler = () => {
@@ -96,7 +96,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    initIngredients: () => dispatch( initIngredients() ),
+    onInitIngredients: () => dispatch( initIngredients() ),
     onIngrAdded: ( name ) => dispatch( addIngredient( name ) ),
     onIngrRemoved: ( name ) => dispatch( removeIngredient( name ) ),
     onPurchaseInit: () => dispatch( purchaseInit() ),
