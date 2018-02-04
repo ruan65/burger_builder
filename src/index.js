@@ -12,7 +12,7 @@ import authReducer from './store/reducers/authReducer'
 import registerServiceWorker from './registerServiceWorker';
 import createSagaMiddleware from 'redux-saga'
 import { watchAuth } from './store/sagas'
-import { logoutSaga } from './store/sagas/logoutSaga'
+import { logoutSaga } from './store/sagas/authSaga'
 
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ?

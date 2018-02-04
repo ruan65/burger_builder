@@ -1,3 +1,6 @@
 export { addIngredient, removeIngredient, initIngredients } from './burgerBuilderActions'
 export { purchaseInit, purchaseBurger, purchaseBurgerStart, fetchOrders } from './orderActions'
-export { authAction, logout, setAuthRedirectAction, authCheckState } from './authActions'
+export {
+  authStartAction, authAction, logout, setAuthRedirectAction,
+  authCheckState, authSuccessAction, authFailedAction, checkAuthTimeout
+} from './authActions'
