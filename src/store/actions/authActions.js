@@ -27,22 +27,13 @@ export const authFailedAction = error => {
 }
 
 export const logout = () => {
-  
-  localStorage.removeItem( 'bb_token' )
-  localStorage.removeItem( 'bb_token_expiration' )
-  localStorage.removeItem( 'bb_userId' )
-  
-  return {
-    type: actionTypes.AUTH_LOGOUT
-  }
+  return { type: actionTypes.AUTH_INITIATE_LOGOUT }
 }
 
 export const checkAuthTimeout = ( expirationTime ) => {
-  return dispatch => {
-    
-    setTimeout( () => {
-      dispatch( logout() )
-    }, expirationTime * 1000 )
+  return {
+    type: actionTypes.AUTH_CHECK_TIMEOUT,
+    expirationTime
   }
 }
 
@@ -98,8 +89,7 @@ export const authCheckState = () => {
       if ( expirationDate > new Date() ) {
         dispatch( authSuccessAction( token, localStorage.getItem( 'bb_userId' ) ) )
         dispatch( checkAuthTimeout(
-          ( expirationDate.getTime() - new Date().getTime() ) / 1000
-          )
+          ( expirationDate.getTime() - new Date().getTime() ) / 1000 )
         )
       } else {
         dispatch( logout() )
