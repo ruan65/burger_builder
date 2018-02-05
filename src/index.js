@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
-import thunk from 'redux-thunk'
 import './index.css';
 import App from './App';
 import burgerBuilderReducer from './store/reducers/burgerBuilderReducer'
@@ -26,7 +25,7 @@ const rootReducer = combineReducers(
 
 const sagaMiddleware = createSagaMiddleware()
 
-const enhancer = composeEnhancers( applyMiddleware( thunk, sagaMiddleware ) )
+const enhancer = composeEnhancers( applyMiddleware( sagaMiddleware ) )
 
 const store = createStore( rootReducer, enhancer )
 
