@@ -1,4 +1,4 @@
-export { addIngredient, removeIngredient, initIngredients } from './burgerBuilderActions'
+export { addIngredient, removeIngredient, initIngredients, fetchIngredientsFailed, setIngredients } from './burgerBuilderActions'
 export { purchaseInit, purchaseBurger, purchaseBurgerStart, fetchOrders } from './orderActions'
 export {
   authStartAction, authAction, logout, setAuthRedirectAction,

@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes'
-import axiosBurgerBuilder from '../../AxiosOrders'
 
 export const addIngredient = ( ingredientName) => {
   return {
@@ -29,9 +28,7 @@ export const fetchIngredientsFailed = () => {
 }
 
 export const initIngredients = () => {
-  return dispatch => {
-    axiosBurgerBuilder.get('/ingredients.json')
-      .then(response => dispatch(setIngredients(response.data)))
-      .catch( error => dispatch(fetchIngredientsFailed()))
+  return {
+    type: ActionTypes.FETCH_INGREDIENTS_FROM_SERVER
   }
 }

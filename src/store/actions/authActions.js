@@ -49,23 +49,7 @@ export const setAuthRedirectAction = ( path ) => {
 }
 
 export const authCheckState = () => {
-  return dispatch => {
-    
-    const token = localStorage.getItem( 'bb_token' )
-    
-    if ( !token ) {
-      dispatch( logout() )
-    } else {
-      const expirationDate = new Date( localStorage.getItem( 'bb_token_expiration' ) )
-      
-      if ( expirationDate > new Date() ) {
-        dispatch( authSuccessAction( token, localStorage.getItem( 'bb_userId' ) ) )
-        dispatch( checkAuthTimeout(
-          ( expirationDate.getTime() - new Date().getTime() ) / 1000 )
-        )
-      } else {
-        dispatch( logout() )
-      }
-    }
+  return {
+    type: actionTypes.AUTH_CHECK_INITIAL_STATE
   }
 }

@@ -5,6 +5,7 @@ import * as actions from "../actions/indexActions"
 import { firebaseApiKey } from "../../appSettings"
 import axios from "axios"
 import { urls } from '../../Cv'
+import { authSuccessAction, checkAuthTimeout, logout } from "../actions/authActions";
 
 export function* logoutSaga( action ) {
   
@@ -49,5 +50,29 @@ export function* authUserSaga( action ) {
   } catch ( error ) {
     console.log( error )
     yield put( actions.authFailedAction( error.response.data.error ) )
+  }
+}
+
+export function* authCheckStateSaga( action ) {
+  
+  const token = yield localStorage.getItem( 'bb_token' )
+  
+  if ( !token ) {
+    yield put( actions.logout() )
+  } else {
+    const expirationDate = yield new Date( localStorage.getItem( 'bb_token_expiration' ) )
+    
+    if ( expirationDate > new Date() ) {
+      
+      const userId = yield localStorage.getItem( 'bb_userId' )
+      
+      yield put( actions.authSuccessAction( token, userId ) )
+      
+      yield put( actions.checkAuthTimeout(
+        ( expirationDate.getTime() - new Date().getTime() ) / 1000 )
+      )
+    } else {
+      yield put( logout() )
+    }
   }
 }
